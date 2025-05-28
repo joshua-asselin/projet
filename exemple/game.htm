@@ -1,0 +1,139 @@
+HTML
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini-jeu de calcul d'aire de quadrilatères</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: linear-gradient(to bottom, #87CEEB, #4682B4);
+            background-size: 100% 100%;
+            background-attachment: fixed;
+        }
+        #question {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-shadow: 2px 2px 4px #000000;
+        }
+        #reponse {
+            width: 200px;
+            height: 30px;
+            font-size: 18px;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 2px 2px 4px #000000;
+        }
+        #resultat {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00FF00;
+            text-shadow: 2px 2px 4px #000000;
+        }
+        #score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-shadow: 2px 2px 4px #000000;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color: #FFFFFF; text-shadow: 2px 2px 4px #000000;">Mini-jeu de calcul d'aire de quadrilatères</h1>
+    <p id="question"></p>
+    <input type="number" id="reponse" step="0.01" placeholder="Entrez votre réponse">
+    <button onclick="verifierReponse()" style="border-radius: 10px; padding: 10px; box-shadow: 2px 2px 4px #000000;">Vérifier</button>
+    <p id="resultat"></p>
+    <p id="score"></p>
+    <script>
+        let score = 0;
+        let questionActuelle = 0;
+        const questions = [];
+        for (let i = 0; i < 10; i++) {
+            const type = Math.floor(Math.random() * 4);
+            switch (type) {
+                case 0:
+                    questions.push({
+                        type: "rectangle",
+                        longueur: Math.round(Math.random() * 10 * 100) / 100,
+                        largeur: Math.round(Math.random() * 10 * 100) / 100,
+                        aire: Math.round(Math.random() * 10 * 100 * Math.random() * 10 * 100) / 10000
+                    });
+                    questions[i].aire = questions[i].longueur * questions[i].largeur;
+                    break;
+                case 1:
+                    questions.push({
+                        type: "carré",
+                        côté: Math.round(Math.random() * 10 * 100) / 100,
+                        aire: Math.round(Math.random() * 10 * 100 * Math.random() * 10 * 100) / 10000
+                    });
+                    questions[i].aire = questions[i].côté * questions[i].côté;
+                    break;
+                case 2:
+                    questions.push({
+                        type: "parallélogramme",
+                        base: Math.round(Math.random() * 10 * 100) / 100,
+                        hauteur: Math.round(Math.random() * 10 * 100) / 100,
+                        aire: Math.round(Math.random() * 10 * 100 * Math.random() * 10 * 100) / 10000
+                    });
+                    questions[i].aire = questions[i].base * questions[i].hauteur;
+                    break;
+                case 3:
+                    questions.push({
+                        type: "trapèze",
+                        base1: Math.round(Math.random() * 10 * 100) / 100,
+                        base2: Math.round(Math.random() * 10 * 100) / 100,
+                        hauteur: Math.round(Math.random() * 10 * 100) / 100,
+                        aire: Math.round(Math.random() * 10 * 100 * Math.random() * 10 * 100) / 10000
+                    });
+                    questions[i].aire = (questions[i].base1 + questions[i].base2) * questions[i].hauteur / 2;
+                    break;
+            }
+        }
+
+        function genererQuestion() {
+            const question = questions[questionActuelle];
+            let texteQuestion = "";
+            switch (question.type) {
+                case "rectangle":
+                    texteQuestion = `Quelle est l'aire d'un rectangle de longueur ${question.longueur} cm et de largeur ${question.largeur} cm ?`;
+                    break;
+                case "carré":
+                    texteQuestion = `Quelle est l'aire d'un carré de côté ${question.côté} cm ?`;
+                    break;
+                case "parallélogramme":
+                    texteQuestion = `Quelle est l'aire d'un parallélogramme de base ${question.base} cm et de hauteur ${question.hauteur} cm ?`;
+                    break;
+                case "trapèze":
+                    texteQuestion = `Quelle est l'aire d'un trapèze de bases ${question.base1} cm et ${question.base2} cm et de hauteur ${question.hauteur} cm ?`;
+                    break;
+            }
+            document.getElementById("question").innerText = texteQuestion;
+            document.getElementById("score").innerText = `Score : ${score} / ${questionActuelle}`;
+        }
+
+        function verifierReponse() {
+            const reponse = parseFloat(document.getElementById("reponse").value);
+            const question = questions[questionActuelle];
+            if (Math.abs(reponse - question.aire) < 0.01) {
+                document.getElementById("resultat").innerText = "Bonne réponse !";
+                score++;
+            } else {
+                document.getElementById("resultat").innerText = `Mauvaise réponse. La bonne réponse était ${question.aire.toFixed(2)} cm².`;
+            }
+            questionActuelle++;
+            if (questionActuelle >= questions.length) {
+                document.getElementById("question").innerText = `Jeu terminé ! Votre score est de ${score} sur ${questions.length}.`;
+                document.getElementById("reponse").disabled = true;
+            } else {
+                genererQuestion();
+                document.getElementById("reponse").value = "";
+            }
+        }
+
+        genererQuestion();
+    </script>
+</body>
+</html>
