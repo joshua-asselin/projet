@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu de Voiture</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #piste {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="piste" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('piste');
+        const ctx = canvas.getContext('2d');
+
+        // Dessiner la piste
+        function drawTrack() {
+            ctx.fillStyle = 'gray';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            ctx.fillRect(50, 50, 700, 500); // Ligne blanche pour simuler la piste
+        }
+
+        // Voiture
+        let voiture = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            taille: 50,
+            vitesse: 50
+        };
+
+        // Dessiner la voiture
+        function drawVoiture() {
+            ctx.fillStyle = 'red';
+            ctx.fillRect(voiture.x, voiture.y, voiture.taille, voiture.taille);
+        }
+
+        // Mettre à jour la position de la voiture
+        function updateVoiture() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawTrack();
+            drawVoiture();
+        }
+
+        // Gestion des événements clavier
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowUp':
+                    voiture.y -= voiture.vitesse;
+                    break;
+                case 'ArrowDown':
+                    voiture.y += voiture.vitesse;
+                    break;
+                case 'ArrowLeft':
+                    voiture.x -= voiture.vitesse;
+                    break;
+                case 'ArrowRight':
+                    voiture.x += voiture.vitesse;
+                    break;
+            }
+            updateVoiture();
+        });
+
+        // Initialisation
+        drawTrack();
+        drawVoiture();
+    </script>
+</body>
+</html>
